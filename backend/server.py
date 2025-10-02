@@ -226,7 +226,7 @@ async def logout(request: Request, response: Response, credentials: HTTPAuthoriz
 
 # Delivery entries endpoints
 @api_router.post("/entries", response_model=DeliveryEntry)
-async def create_entry(entry_data: DeliveryEntryCreate, request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def create_entry(entry_data: DeliveryEntryCreate, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Create a new delivery entry"""
     user = await require_auth(request, credentials)
     
@@ -239,7 +239,7 @@ async def create_entry(entry_data: DeliveryEntryCreate, request: Request, creden
     return entry
 
 @api_router.get("/entries", response_model=List[DeliveryEntry])
-async def get_user_entries(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_user_entries(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get current user's delivery entries"""
     user = await require_auth(request, credentials)
     
@@ -247,7 +247,7 @@ async def get_user_entries(request: Request, credentials: HTTPAuthorizationCrede
     return [DeliveryEntry(**entry) for entry in entries]
 
 @api_router.get("/entries/{entry_id}", response_model=DeliveryEntry)
-async def get_entry(entry_id: str, request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_entry(entry_id: str, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get specific entry"""
     user = await require_auth(request, credentials)
     
@@ -262,7 +262,7 @@ async def get_entry(entry_id: str, request: Request, credentials: HTTPAuthorizat
     return DeliveryEntry(**entry)
 
 @api_router.put("/entries/{entry_id}", response_model=DeliveryEntry)
-async def update_entry(entry_id: str, entry_data: DeliveryEntryUpdate, request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def update_entry(entry_id: str, entry_data: DeliveryEntryUpdate, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Update delivery entry"""
     user = await require_auth(request, credentials)
     
@@ -284,7 +284,7 @@ async def update_entry(entry_id: str, entry_data: DeliveryEntryUpdate, request: 
     return DeliveryEntry(**updated_entry)
 
 @api_router.delete("/entries/{entry_id}")
-async def delete_entry(entry_id: str, request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def delete_entry(entry_id: str, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Delete delivery entry"""
     user = await require_auth(request, credentials)
     
@@ -301,7 +301,7 @@ async def delete_entry(entry_id: str, request: Request, credentials: HTTPAuthori
 
 # Dashboard endpoints
 @api_router.get("/dashboard/summary", response_model=DashboardSummary)
-async def get_dashboard_summary(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_dashboard_summary(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get dashboard summary - aggregate data from all users"""
     user = await require_auth(request, credentials)
     
@@ -361,7 +361,7 @@ async def get_dashboard_summary(request: Request, credentials: HTTPAuthorization
     )
 
 @api_router.get("/dashboard/chart-data")
-async def get_chart_data(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_chart_data(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get chart data for dashboard visualization"""
     user = await require_auth(request, credentials)
     
@@ -397,7 +397,7 @@ async def get_chart_data(request: Request, credentials: HTTPAuthorizationCredent
 
 # Admin endpoints
 @api_router.get("/admin/entries", response_model=List[DeliveryEntry])
-async def get_all_entries(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_all_entries(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get all delivery entries (admin only)"""
     user = await require_admin(request, credentials)
     
@@ -405,7 +405,7 @@ async def get_all_entries(request: Request, credentials: HTTPAuthorizationCreden
     return [DeliveryEntry(**entry) for entry in entries]
 
 @api_router.get("/admin/users", response_model=List[User])
-async def get_all_users(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_all_users(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get all users (admin only)"""
     user = await require_admin(request, credentials)
     
@@ -413,7 +413,7 @@ async def get_all_users(request: Request, credentials: HTTPAuthorizationCredenti
     return [User(**user) for user in users]
 
 @api_router.get("/admin/export")
-async def export_data(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def export_data(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Export all data as JSON (admin only)"""
     user = await require_admin(request, credentials)
     
