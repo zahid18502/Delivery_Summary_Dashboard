@@ -209,7 +209,7 @@ async def get_me(request: Request, credentials: HTTPAuthorizationCredentials = D
     return {"user": user.dict()}
 
 @api_router.post("/auth/logout")
-async def logout(request: Request, response: Response, credentials: HTTPAuthorizationCredentials = security):
+async def logout(request: Request, response: Response, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Logout current user"""
     session_token = request.cookies.get("session_token")
     if not session_token and credentials:
