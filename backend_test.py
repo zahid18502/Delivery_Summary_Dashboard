@@ -284,8 +284,9 @@ class DeliveryDashboardTester:
         print("\n=== Testing CORS Headers ===")
         
         try:
-            # Try a regular GET request to see if CORS headers are added
-            response = self.session.get(f"{BASE_URL}/")
+            # CORS headers are only added when there's an Origin header
+            headers = {'Origin': 'https://example.com'}
+            response = self.session.get(f"{BASE_URL}/", headers=headers)
             
             # Check for CORS headers (case-insensitive)
             cors_headers_found = []
