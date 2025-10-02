@@ -201,7 +201,7 @@ async def create_session(request: Request, response: Response):
         raise HTTPException(status_code=500, detail="Authentication service unavailable")
 
 @api_router.get("/auth/me")
-async def get_me(request: Request, credentials: HTTPAuthorizationCredentials = security):
+async def get_me(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Get current user information"""
     user = await get_current_user(request, credentials)
     if not user:
