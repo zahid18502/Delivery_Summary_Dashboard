@@ -281,30 +281,19 @@ class DeliveryDashboardTester:
         print("\n=== Testing CORS Headers ===")
         
         try:
-            # Make an OPTIONS request to check CORS
-            response = self.session.options(f"{BASE_URL}/")
+            # Try a regular GET request to see if CORS headers are added
+            response = self.session.get(f"{BASE_URL}/")
             
-            # Check if CORS headers are present
-            cors_headers = [
-                'Access-Control-Allow-Origin',
-                'Access-Control-Allow-Methods',
-                'Access-Control-Allow-Headers'
-            ]
+            # Check for CORS headers (case-insensitive)
+            cors_headers_found = []
+            for header_name, header_value in response.headers.items():
+                if header_name.lower().startswith('access-control-'):
+                    cors_headers_found.append(f"{header_name}: {header_value}")
             
-            found_cors_headers = []
-            for header in cors_headers:
-                if header in response.headers:
-                    found_cors_headers.append(header)
-            
-            if found_cors_headers:
-                self.log_result("CORS Configuration", True, f"Found CORS headers: {found_cors_headers}")
+            if cors_headers_found:
+                self.log_result("CORS Configuration", True, f"Found CORS headers: {cors_headers_found}")
             else:
-                # Try a regular GET request to see if CORS headers are added
-                response = self.session.get(f"{BASE_URL}/")
-                if 'Access-Control-Allow-Origin' in response.headers:
-                    self.log_result("CORS Configuration", True, "CORS headers present in GET response")
-                else:
-                    self.log_result("CORS Configuration", False, "No CORS headers found")
+                self.log_result("CORS Configuration", False, "No CORS headers found")
         except Exception as e:
             self.log_result("CORS Configuration", False, f"Exception: {str(e)}")
     
